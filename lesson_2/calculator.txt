@@ -1,0 +1,57 @@
+Calculator - PEDAC
+
+Process the Problem
+  1. identify expected input and output
+  2. make requirements explicit
+  3 identify rules
+  4. Mental model of the problem
+  
+  Input: 2 Numbers
+  Output: 1 Numbers
+  
+  The problem does not call for a specific type of number. Will try using float as it is more precise.
+  The problem does not eliminate 0 as an input. Therefore will need to require outs for 0 errors
+  If a user enters something other than a float number, then tell them to try again.
+  
+  
+  Prompt the user to enter their first number and store as float1 . If it is something other than a Float throw error and ask again.
+  Prompt the user to enter their second number and store as float2. If it is something other than a FLoat throw error and ask again.
+  Prompt user to enter the operation to be performed and store as operation. If other than add, subtract, multiply or divide then throw error and ask again
+  Output the calculation of float 1 and float2 using operation.
+  
+  
+Example/Test Case
+  TEST 1
+  float1 = 12
+  float2 = 3
+  operation = divide
+  output = 4
+  
+  TEST 2
+  float1 = 0
+  float2 = 4
+  operation = divide 
+  output = error, cannont divide zero
+  
+  TEST 3
+  float1 = 11.5
+  float2 = 8.6
+  operation = multiply
+  output = 98.9
+
+Data Structure
+ float1 = Float.new
+ float2 = Float.new
+ operation = String.new
+
+Algorithim
+  1. Creata a Float variable named float1 and float2
+  2. Prompt user to enter their first value
+  3. Check users input to confirm it can be converted to a Float
+    -if it cannot throw error and prompt user to enter new Float
+    -if it can be converted set float1 equal to the input converted to Float
+  4. Repeat steps 2-3 for float2
+  5. prompt user to input operation
+    -if DOES NOT equal operation equals add, subtract, multiply, or divide throw error and ask user to enter again
+    -if it does equal add, subtract, multiply, or divide then set operation equal to its value
+  6. display the result of float1 operation float2

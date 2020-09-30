@@ -1,0 +1,57 @@
+# pseudo_code.txt
+
+
+
+START
+
+# a method that returns the sum of two integers
+
+SET integer1 = nil
+SET integer2 = nil
+
+GET integer1 = user given input
+GET integer2 = user given input
+
+IF integer1 or interg 2 is not an Integer 
+  throw error
+ELSE 
+  PRINT integer1 + integer2
+
+END
+
+
+
+START
+
+# a method that takes an array of strings, and returs a string that is all those strings concatenated together
+
+SET array = an Array of Strings
+SET result = a blank String
+SET counter = 0
+
+WHILE counter < array.length
+  SET result = result + string within array at space counter
+  SET counter += 1
+  
+PRINT result
+
+END
+
+
+START
+
+# a method that takes an array of integers, and returns a new array with every other element
+
+SET array = an array of integers
+SET return_array = an empty array
+SET counter = 0
+
+WHILE counter < array.length
+  IF counter == 0 || counter % 2 == 0
+    SET return_array[counter] = current element of array
+  ELSE
+    go to the next element
+    
+PRINT return_array
+
+END
