@@ -1,3 +1,4 @@
+require "pry"
 # calculator2.rb
 
 # ask the user for two numnbers
@@ -13,7 +14,17 @@ def prompt(message)
 end
 
 def valid_number?(num)
-  num.to_i() != 0
+  # create an array 0..9
+  # turn num into an array of string characters 
+  # iterate through the array of strings to check if each element is included in the number array
+  #   if all are  included return num
+  #   else return false
+  valid = true
+  number_array = ['0','1', '2', '3', '4', '5', '6', '7', '8', '9']
+  
+  num.split(//).each { |x| number_array.include?(x) ? next : valid = false }
+  
+  valid ? (return num) : (return false)
 end
 
 def operation_to_message(op)
