@@ -1,0 +1,29 @@
+# rubocop_error
+
+Cloud9 
+Ruby 2.6.3
+
+ec2-user:~/environment/RB101/lesson_2 (master) $ gem install rubocop --version 0.85.0
+Fetching rubocop-0.85.0.gem
+Successfully installed rubocop-0.85.0
+Parsing documentation for rubocop-0.85.0
+Installing ri documentation for rubocop-0.85.0
+Done installing documentation for rubocop after 6 seconds
+1 gem installed
+
+ec2-user:~/environment/RB101/lesson_2 (master) $ rubocop -v
+Traceback (most recent call last):
+        13: from /home/ec2-user/.rvm/gems/ruby-2.6.3/bin/ruby_executable_hooks:24:in `<main>'
+        12: from /home/ec2-user/.rvm/gems/ruby-2.6.3/bin/ruby_executable_hooks:24:in `eval'
+        11: from /home/ec2-user/.rvm/gems/ruby-2.6.3/bin/rubocop:23:in `<main>'
+        10: from /home/ec2-user/.rvm/gems/ruby-2.6.3/bin/rubocop:23:in `load'
+         9: from /home/ec2-user/.rvm/gems/ruby-2.6.3/gems/rubocop-0.85.0/exe/rubocop:6:in `<top (required)>'
+         8: from /home/ec2-user/.rvm/rubies/ruby-2.6.3/lib/ruby/site_ruby/2.6.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+         7: from /home/ec2-user/.rvm/rubies/ruby-2.6.3/lib/ruby/site_ruby/2.6.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+         6: from /home/ec2-user/.rvm/gems/ruby-2.6.3/gems/rubocop-0.85.0/lib/rubocop.rb:476:in `<top (required)>'
+         5: from /home/ec2-user/.rvm/gems/ruby-2.6.3/gems/rubocop-0.85.0/lib/rubocop.rb:476:in `require_relative'
+         4: from /home/ec2-user/.rvm/gems/ruby-2.6.3/gems/rubocop-0.85.0/lib/rubocop/cop/style/redundant_conditional.rb:3:in `<top (required)>'
+         3: from /home/ec2-user/.rvm/gems/ruby-2.6.3/gems/rubocop-0.85.0/lib/rubocop/cop/style/redundant_conditional.rb:4:in `<module:RuboCop>'
+         2: from /home/ec2-user/.rvm/gems/ruby-2.6.3/gems/rubocop-0.85.0/lib/rubocop/cop/style/redundant_conditional.rb:5:in `<module:Cop>'
+         1: from /home/ec2-user/.rvm/gems/ruby-2.6.3/gems/rubocop-0.85.0/lib/rubocop/cop/style/redundant_conditional.rb:27:in `<module:Style>'
+/home/ec2-user/.rvm/gems/ruby-2.6.3/gems/rubocop-0.85.0/lib/rubocop/cop/style/redundant_conditional.rb:57:in `<class:RedundantConditional>': undefined method `join' for #<Set: {:==, :===, :!=, :<=, :>=, :>, :<}> (NoMethodError)
