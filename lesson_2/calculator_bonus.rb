@@ -35,6 +35,18 @@ def valid_number?(num)
   valid ? (return num) : (return false)
 end
 
+def integer?(input)         # suggested integer validation in lesson
+  input.to_i.to_s == input
+end
+
+def float?(input)           # suggested float validation in lesson
+  input.to_f.to_s == input
+end
+
+def number?(input)          # suggested method for confirming input is valid number or float
+  integer?(input) || float?(input)
+end
+
 def operation_to_message(op)
   case op
   when '1'
