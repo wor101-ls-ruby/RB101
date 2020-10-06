@@ -1,7 +1,0 @@
-Locate the ruby documentation for methods File::path and File#path. How are they different?
-
-https://docs.ruby-lang.org/en/2.7.0/File.html
-
-File::path is a CLASS method and calls the method on the Class 
-
-File#path is a INSTANCE method and calls the method on an object of that Class
