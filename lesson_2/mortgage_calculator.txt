@@ -1,0 +1,19 @@
+# 
+
+1. Greet user
+2. Prompt user to enter their information
+  a. loan_amount
+    -confirm input is a valid format
+  b. apr
+    -confirm input is valid
+  c. loan_duration
+    -confirm input is valid
+3. Calculate
+  a. monthly interest rate
+  b. loan duration in months
+  c. monthly payment
+
+
+
+Formula
+m = p * (j / (1 - (1 + j)**(-n)))
