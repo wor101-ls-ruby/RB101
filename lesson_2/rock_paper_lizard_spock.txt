@@ -1,0 +1,50 @@
+Lizard Spock
+
+Goals:
+1. The goal of this bonus is to add Lizard and Spock into your code.
+
+2. Typing the full word "rock" or "lizard" is tiring. Update the program so the user can type "r" for "rock," "p" for "paper," etc. 
+  Note that if you do bonus #1, you'll have two words that start with "s." How do you resolve that?
+  
+3. Keep score of the player's and computer's wins. When either the player or computer reaches five wins, the match is over, and the winning player becomes the grand winner. 
+  Don't add your incrementing logic to display_results. Keep your methods simple; they should perform one logical task — no more, no less.
+  
+PSEUDO CODE FOR GOAL 1
+-Create a HASH called outcomes where 
+  -the Key represents the choice from one player. 
+  -The value will be a an array of choices the Key would beat. 
+-Modify the method #win? to check the HASH using the first argument as the key
+  -then check the array matching the key to see if the second choice is included
+  -if the second choice is included return true
+  
+  
+PSEUDO CODE FOR GOAL 2
+-Create new CONSTANT Array called VALID_SHORTHAND_CHOICES that includes 'r', 'p', 'sc' 'l', 'sp'
+
+-create a new methodd #validate_choice that takes one String argument and returns the properly formated choice as a String
+  -BEGIN loop in method
+  -check the String argument against VALID_CHOICES 
+    -if included return String 
+    -BREAK
+  -Elsif check String argument against VALID_ABBREVIATED_CHOICES with a CASE statement
+    -if 'r' then return 'rock ; if 'p' then return 'paper', etc
+    -BREAK
+  -ELSE prompt user for valid choice and mention they can use 'sc' as shorthand for scissors and 'sp' as shorthand for spock
+  -END LOOP
+
+-Remove current loop that validates user input 
+  -replace with call to #validate_choice method
+  -set local variable choice to equal the return String from #validate_choice method
+  
+  
+  3. Keep score of the player's and computer's wins. When either the player or computer reaches five wins, the match is over, and the winning player becomes the grand winner. 
+  Don't add your incrementing logic to display_results. Keep your methods simple; they should perform one logical task — no more, no less.
+  
+  PSEUDO CODE FOR GOAL 3
+  -create Array variable in main loop called score with two elements each with a value of 0
+    -element 1 will be th players score
+    element 2 will be the computers score
+  -create a method similar to #display_results called #update_score
+    -it will test the palyer and computer choice just like #display_results
+    -instead of printing a string it will instead ret
+  
