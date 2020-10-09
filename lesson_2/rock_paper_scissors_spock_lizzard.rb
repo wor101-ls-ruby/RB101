@@ -52,6 +52,10 @@ def validate_choice(string)
   end
 end
 
+def clear_screen
+  system('clear') || system('cls')
+end
+
 prompt("Welcome to Rock, Paper, Scissors, Lizard, Spock!")
 puts ""
 
