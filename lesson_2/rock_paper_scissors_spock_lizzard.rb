@@ -48,8 +48,8 @@ def validate_choice(string)
     VALID_SHORTHAND_CHOICES[string]
   else
     clear_screen
-    puts "Invalid choice."
-    puts "If using shorthand: #{VALID_SHORTHAND_CHOICES.keys.join(', ')}"
+    prompt("Invalid choice.")
+    prompt("If using shorthand: #{VALID_SHORTHAND_CHOICES.keys.join(', ')}")
   end
 end
 
@@ -82,11 +82,11 @@ loop do # main loop
     end
     clear_screen
     computer_choice = VALID_CHOICES.sample
-    Kernel.puts("You chose: #{choice}; Computer chose: #{computer_choice}")
-    puts display_results(choice, computer_choice)
+    prompt("You chose: #{choice}; Computer chose: #{computer_choice}")
+    prompt(display_results(choice, computer_choice))
 
     score = update_score(choice, computer_choice, score) # update score
-    puts "Current Score: You #{score[0]} vs. Computer #{score[1]}"
+    prompt("Current Score: You #{score[0]} vs. Computer #{score[1]}")
 
     if score[0] == 5
       prompt("You are the Grand Winner!")
