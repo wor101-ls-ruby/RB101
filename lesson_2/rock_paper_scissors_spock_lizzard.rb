@@ -47,6 +47,7 @@ def validate_choice(string)
   elsif VALID_SHORTHAND_CHOICES.key?(string)
     VALID_SHORTHAND_CHOICES[string]
   else
+    clear_screen
     puts "Invalid choice."
     puts "If using shorthand: #{VALID_SHORTHAND_CHOICES.keys.join(', ')}"
   end
@@ -56,13 +57,20 @@ def clear_screen
   system('clear') || system('cls')
 end
 
+clear_screen
 prompt("Welcome to Rock, Paper, Scissors, Lizard, Spock!")
 puts ""
+prompt("Please enter your name:")
+
+player_name = gets.chomp
 
 loop do # main loop
+  clear_screen
+  score = [0, 0]
+
+  prompt("Hi #{player_name}!")
   prompt("The first player to 5 is the Grand Winner!")
 
-  score = [0, 0]
   loop do # match loop, first to five is the winner
     choice = ''
 
@@ -72,7 +80,7 @@ loop do # main loop
       choice = validate_choice(choice)
       break if choice
     end
-
+    clear_screen
     computer_choice = VALID_CHOICES.sample
     Kernel.puts("You chose: #{choice}; Computer chose: #{computer_choice}")
     puts display_results(choice, computer_choice)
