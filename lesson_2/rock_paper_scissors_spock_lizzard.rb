@@ -1,3 +1,5 @@
+require "pry"
+
 VALID_CHOICES = ['rock', 'paper', 'scissors', 'lizard', 'spock']
 
 VALID_SHORTHAND_CHOICES = { 'r' => 'rock',
@@ -16,15 +18,15 @@ def prompt(message)
   Kernel.puts("=> #{message}")
 end
 
-def win?(first, second)
+def first_player_win(first, second)
   OUTCOMES[first].include?(second)
 end
 
-def display_results(player, computer)
+def display_win_lose_or_tie(player, computer)
   result = ''
-  if win?(player, computer)
+  if first_player_win(player, computer)
     result = "You won!"
-  elsif win?(computer, player)
+  elsif first_player_win(computer, player)
     result = "Computer won!"
   else
     result = "It's a tie!"
@@ -32,10 +34,15 @@ def display_results(player, computer)
   result
 end
 
+def display_outcome(choice, computer_choice)
+  prompt("You chose: #{choice}; Computer chose: #{computer_choice}")
+  prompt(display_win_lose_or_tie(choice, computer_choice))
+end
+
 def update_score(player, computer, array)
-  if win?(player, computer)
+  if first_player_win(player, computer)
     array[0] += 1
-  elsif win?(computer, player)
+  elsif first_player_win(computer, player)
     array[1] += 1
   end
   array
@@ -53,24 +60,41 @@ def validate_choice(string)
   end
 end
 
+def initialize_score
+  clear_screen
+  score = [0, 0]
+  score
+end 
+
 def clear_screen
   system('clear') || system('cls')
 end
 
-clear_screen
-prompt("Welcome to Rock, Paper, Scissors, Lizard, Spock!")
-puts ""
-prompt("Please enter your name:")
+def display_welcome(name)
+  prompt("Hi #{name}!")
+  prompt("The first player to 5 is the Grand Winner!")
+end
 
-player_name = gets.chomp
+def display_title_screen
+  clear_screen
+  prompt("Welcome to Rock, Paper, Scissors, Lizard, Spock!")
+  puts ""
+end 
+
+def initialize_player_name
+  prompt("Please enter your name:")
+  name = gets.chomp
+  return name
+end
+
+display_title_screen
+player_name = initialize_player_name
+
 
 loop do # main loop
-  clear_screen
-  score = [0, 0]
-
-  prompt("Hi #{player_name}!")
-  prompt("The first player to 5 is the Grand Winner!")
-
+  score = initialize_score
+  display_welcome(player_name)
+  
   loop do # match loop, first to five is the winner
     choice = ''
 
@@ -80,10 +104,11 @@ loop do # main loop
       choice = validate_choice(choice)
       break if choice
     end
+    
     clear_screen
+    
     computer_choice = VALID_CHOICES.sample
-    prompt("You chose: #{choice}; Computer chose: #{computer_choice}")
-    prompt(display_results(choice, computer_choice))
+    display_outcome(choice, computer_choice)
 
     score = update_score(choice, computer_choice, score) # update score
     prompt("Current Score: You #{score[0]} vs. Computer #{score[1]}")
