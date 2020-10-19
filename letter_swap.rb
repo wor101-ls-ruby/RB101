@@ -1,18 +1,7 @@
 def swap_letters(word_string)
-  # first_letter = word_string[0]
-  # last_letter = word_string[-1]
-  # word_string[-1] = first_letter
-  # word_string[0] = last_letter
-  word_string[0], word_string[-1] = word_string[-1], word_string[0]
+  word_string[0], word_string[-1] = word_string[-1], word_string[0]     # when ruby sees 'a, b = b, a' it effectively creates a temporary array so variables values can be swapped
 end
-
-
-# **Algorithm**
-# 1. Create variable first_letter and set it equal to word_string[0]
-# 2. Create variable last_letter and set it equal to word_string[-1]
-# 3. set string[-1] equal to first_letter
-# 4. set string[0] = last_letter
-# 5. return string
+# I am not returning the word_string because i've updated the string in its original memory location
 
 
 def swap (words_string)
@@ -23,13 +12,6 @@ def swap (words_string)
   words_array.join(' ')
 end
 
-
-# **Algorithm**
-# 1. Create an array called words_array2. 
-# 2. Set words_array equal to the input string split into words using .split(' ')
-# 3. Iterate over the words_array and switch first and last letter for each word in swap_letters() method
-# 4. rejoin the modified words_array using .join(' ')
-# 5. return words_array
 
 
 
