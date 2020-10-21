@@ -3,7 +3,6 @@
 def reverse!(array)
   new_index = []
   array.length.times { |i| new_index << [(array.length - i - 1), array[i]] }
-  # p new_index
   new_index.each { |i| array[i[0]] = i[1] }
   p array
 end
