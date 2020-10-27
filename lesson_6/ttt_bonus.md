@@ -44,3 +44,33 @@ joinor([1, 2, 3], ', ', 'and')   # => "1, 2, and 3"
 - if the array is more than 2 elements and this is the final element prepend the string number with the final delimeter 
 - push the string to the joined_string variable
 - return joined_string
+- 
+
+
+**Problem2**
+Keep score of how many times the player and computer each win. Don't use global or instance variables. Make it so that the first player to 5 wins the game.
+
+Rule:
+Explicit
+  - Input: array of 2 integers
+  - Output: array of 2 integers
+  - Do not use global or instance variables
+  - First player to 5 wins is the winner
+Implicit
+  -
+
+**Examples**
+
+**Data Structures**
+score = {'Player' => 0, 'Computer' => 0}
+
+**Algorithm**
+- create method called update_score()
+  - update_score will update the score array by mutating the array
+  - it will be passed the return value of detect_winner and the score hash
+  - based on input it will update either the value of player or computer
+- create a method called check for final_winner
+  - it will take the score hash as an argument
+  - if either the value of player or computer is 5 then it will return the key otherwise it will return nil
+- if final_winner return is true then declare grand winner
+- else repeate game loop
