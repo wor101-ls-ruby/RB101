@@ -27,11 +27,14 @@ end
 
 def who_goes_first?
   loop do
-    prompt "Please choose who goes first (player or computer): "
+    prompt "Please choose who goes first (player, computer or random): "
     answer = gets.chomp.downcase
     if answer == 'player' || answer == 'computer'
       system 'clear'
       return answer
+    elsif answer == 'random'
+      system 'clear'
+      return %w(player computer).sample
     end
   end
 end
@@ -50,10 +53,8 @@ def joinor(input_array, delimeter = ', ', final_delimeter = 'or')
 end
 
 # rubocop:disable Metrics/AbcSize
-# rubocop:disable Metrics/MethodLength
-def display_board(brd, current_score)
+def display_board(brd)
   system 'clear'
-  puts display_score(current_score)
   puts "You're a #{PLAYER_MARKER}. Computer is a #{COMPUTER_MARKER}"
   puts ""
   puts "     |     |"
@@ -70,7 +71,6 @@ def display_board(brd, current_score)
   puts ""
 end
 # rubocop:enable Metrics/AbcSize
-# rubocop:enable Metrics/MethodLength
 
 def initialize_board
   new_board = {}
@@ -195,14 +195,14 @@ loop do
   current_player = greeting
 
   loop do
-    display_board(board, score)
+    display_board(board)
     place_piece!(board, current_player, current_play)
     current_player = alternate_player(current_player)
     current_play += 1
     break if someone_won?(board) || board_full?(board)
   end
 
-  display_board(board, score)
+  display_board(board)
 
   if someone_won?(board)
     prompt "#{detect_winner(board)} won!"
