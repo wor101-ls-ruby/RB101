@@ -1,5 +1,3 @@
-require 'pry'
-
 FIRST_MOVE = 'choose'
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
@@ -9,7 +7,6 @@ WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
                 [[1, 5, 9], [3, 5, 7]] # diagnols
 
 score = { 'Player' => 0, 'Computer' => 0 }
-current_match = 0
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -22,39 +19,39 @@ def greeting
   puts ""
 
   if FIRST_MOVE == "choose"
-    loop do
-      prompt "Please choose who goes first (player or computer): "
-      answer = gets.chomp.downcase
-      if  answer == 'player' || answer == 'computer'
-        first_player = answer
-        system 'clear'
-        break
-      end
-    end
+    first_player = who_goes_first?
   end
 
   first_player
 end
 
-def joinor(input_array, delimeter = ', ', final_delimeter = 'or')
-  joined_string = ''
-
-  if input_array.length <= 2
-    return joined_string = input_array.join(' ' + final_delimeter + ' ')
-  end
-
-  input_array.each_with_index do |int, index|
-    if input_array[index] != input_array.last
-      joined_string << int.to_s + delimeter
-    else
-      joined_string << final_delimeter + ' ' + int.to_s
+def who_goes_first?
+  loop do
+    prompt "Please choose who goes first (player or computer): "
+    answer = gets.chomp.downcase
+    if answer == 'player' || answer == 'computer'
+      system 'clear'
+      return answer
     end
   end
-  joined_string
+end
+
+def joinor(input_array, delimeter = ', ', final_delimeter = 'or')
+  return_string = ''
+  input_array.each_with_object(return_string) do |int, joined_string|
+    if input_array.length <= 2
+      return input_array.join(' ' + final_delimeter + ' ')
+    elsif int != input_array.last
+      joined_string << (int.to_s + delimeter)
+    else
+      joined_string << (final_delimeter + ' ' + int.to_s)
+    end
+  end
 end
 
 # rubocop:disable Metrics/AbcSize
-def display_board(brd, current_score = { 'Player' => 0, 'Computer' => 0 })
+# rubocop:disable Metrics/MethodLength
+def display_board(brd, current_score)
   system 'clear'
   puts display_score(current_score)
   puts "You're a #{PLAYER_MARKER}. Computer is a #{COMPUTER_MARKER}"
@@ -73,6 +70,7 @@ def display_board(brd, current_score = { 'Player' => 0, 'Computer' => 0 })
   puts ""
 end
 # rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/MethodLength
 
 def initialize_board
   new_board = {}
@@ -107,30 +105,42 @@ def player_places_piece!(brd)
   brd[square] = PLAYER_MARKER
 end
 
-def computer_places_piece!(brd, match_number)
+def choose_square(brd, current_play)
   if immediate_offense_defense(brd, COMPUTER_MARKER)
-    square = immediate_offense_defense(brd, COMPUTER_MARKER)
+    immediate_offense_defense(brd, COMPUTER_MARKER)
   elsif immediate_offense_defense(brd, PLAYER_MARKER)
-    square = immediate_offense_defense(brd, PLAYER_MARKER)
-  elsif empty_squares(brd).include?(5) && match_number > 1
-    square = 5
+    immediate_offense_defense(brd, PLAYER_MARKER)
+  elsif empty_squares(brd).include?(5) && current_play > 1
+    5
   else
-    square = empty_squares(brd).sample
+    empty_squares(brd).sample
   end
+end
+
+# rubocop wants this broken out into another method?
+def computer_places_piece!(brd, current_play)
+  square = choose_square(brd, current_play)
   brd[square] = COMPUTER_MARKER
 end
 
-# need to simplify method to and probably break out into additional methods
+def current_line_state(winning_line, brd)
+  line_state = { 0 => ' ', 1 => ' ', 2 => ' ' }
+  winning_line.each_with_index do |square, index|
+    line_state[index] = brd[square]
+  end
+  line_state
+end
+
 def immediate_offense_defense(brd, marker)
   next_move = nil
+
   WINNING_LINES.each do |winning_line|
-    if (brd[winning_line[0]] == marker) &&
-       (brd[winning_line[1]] == marker) &&
-       (brd[winning_line[2]] == INITIAL_MARKER)
+    line_state = current_line_state(winning_line, brd)
+    player_pieces = line_state.values.count(marker)
+
+    if player_pieces == 2 && line_state[2] == INITIAL_MARKER
       next_move = winning_line[2]
-    elsif (brd[winning_line[1]] == marker) &&
-          (brd[winning_line[2]] == marker) &&
-          (brd[winning_line[0]] == INITIAL_MARKER)
+    elsif player_pieces == 2 && line_state[0] == INITIAL_MARKER
       next_move = winning_line[0]
     end
   end
@@ -181,13 +191,14 @@ end
 
 loop do
   board = initialize_board
-  current_match = 0
+  current_play = 0
   current_player = greeting
 
   loop do
-    display_board(board)
-    place_piece!(board, current_player, current_match)
+    display_board(board, score)
+    place_piece!(board, current_player, current_play)
     current_player = alternate_player(current_player)
+    current_play += 1
     break if someone_won?(board) || board_full?(board)
   end
 
