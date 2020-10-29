@@ -1,3 +1,4 @@
+require 'pry'
 # DECK = { '2h' => { name: 'Two', value: 2, suit: 'Hearts' }, '2d' => { name: 'Two', value: 2, suit: 'Diamonds' }, 
 #         '2c' => { name: 'Two', value: 2, suit: 'Clubs' }, '2s' => { name: 'Two', value: 2, suit: 'Spades' }, 
 #         '3h' => { name: 'Three', value: 3, suit: 'Hearts' }, '3d' => { name: 'Three', value: 3, suit: 'Diamonds' }, 
@@ -78,7 +79,25 @@ def player_hand_as_string(hand)
   hand_as_string
 end
 
+def hit?
+  prompt "Hit or Stay (h or s)?:"
+  answer = gets.chop.downcase
+  answer[0] == 'h' ? true : false
+end
 
+def determine_value(card, hand)
+  if card[:name] != 'Ace'
+    card[:value]
+  else
+    ace_value(hand)
+  end
+end
+
+def ace_value(hand)
+  non_ace_cards = hand.select { |card| card[:name] != 'Ace' }
+  non_ace_cards_value = non_ace_cards.inject(0) { |sum, card| sum + card[:value] }
+  non_ace_cards_value <= 10 ? 11 : 1
+end
 
 # p shuffled_deck[0..2]
 
@@ -96,13 +115,23 @@ loop do
   
   # begin player loop
   loop do
-    dealer_total = dealer_hand[1..-1].inject(0) { |sum, card| sum + card[:value] } 
-    player_total = player_hand.inject(0) { |sum, card| sum + card[:value] }
+
+    dealer_total = 0
+    dealer_total = dealer_hand[1..-1].inject(0) { |sum, card| sum + determine_value(card, dealer_hand) }
     
+    player_total = 0
+    player_total = player_hand.inject(0) { |sum, card| sum + determine_value(card, player_hand) }
+    
+    system 'clear'
+    if player_total > 21
+      puts "You were dealt a #{player_hand[-1][:name]} for a total of #{player_total}."
+      puts "You busted!"
+      break
+    end
     puts "Delear has: #{dealer_hand[1][:name]} of #{dealer_hand[1][:suit]} for a total of #{dealer_total}" 
     puts "Player has: #{player_hand_as_string(player_hand)} for a total of #{player_total}"
-    prompt "Hit or Stay (h or s)?:" 
-    break
+    break if hit? != true
+    deal_cards!(shuffled_deck, player_hand, 1)
   end
   
   # p player_hand
