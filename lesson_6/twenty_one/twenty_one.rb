@@ -54,6 +54,7 @@ DECK = [ { name: 'Two', value: 2, suit: 'Hearts' }, { name: 'Two', value: 2, sui
         { name: 'Ace', value: [1, 11], suit: 'Clubs' }, { name: 'Ace', value: [1, 11], suit: 'Spades' } ]    
 
 
+
 def prompt(string)
   puts '=>' + string
 end
@@ -68,7 +69,7 @@ def deal_cards!(deck, hand, number_of_cards)
   deck.shift(number_of_cards).each { |card| hand << card }
 end
 
-def player_hand_as_string(hand)
+def hand_as_string(hand)
   hand_as_string = ''
   hand.each do |card|
     hand_as_string << card[:name] + ' of ' + card[:suit]
@@ -85,19 +86,38 @@ def hit?
   answer[0] == 'h' ? true : false
 end
 
-def determine_value(card, hand)
-  if card[:name] != 'Ace'
-    card[:value]
-  else
-    ace_value(hand)
-  end
-end
-
-def ace_value(hand)
+def determine_value(hand)
   non_ace_cards = hand.select { |card| card[:name] != 'Ace' }
   non_ace_cards_value = non_ace_cards.inject(0) { |sum, card| sum + card[:value] }
-  non_ace_cards_value <= 10 ? 11 : 1
+  
+  ace_cards_value = 0
+  ace_cards = hand.select { |card| card[:name] == 'Ace' }
+
+  if ace_cards.size > 0
+    ace_cards_value = determine_ace_value(ace_cards, non_ace_cards_value)
+  end
+  non_ace_cards_value + ace_cards_value
 end
+
+def determine_ace_value(ace_cards, non_ace_card_value)
+  number_of_ace_cards = ace_cards.size
+  number_of_ace_cards.times do |i|
+    ace_value = (11 * (number_of_ace_cards - i)) + (1 * i)
+    return ace_value if ace_value + non_ace_card_value <= 21
+  end
+  number_of_ace_cards
+  # can probably simplify by as only 1 Ace can ever be worth 11. 
+  # Check if (11 + # of ace cards - 1) + non-ace value <= 21 else return # of ace cards
+end
+  
+
+# **algorithm**
+# # find out total # of ace cards
+# # use .times on ace cards 
+# # each time mutiply 11 * (#acecards - i) + (1*i)
+# # if that plus non_ace_card_value is <= 21 return value
+# # else return #acecards
+    
 
 # p shuffled_deck[0..2]
 
@@ -108,38 +128,86 @@ loop do
   shuffled_deck = initialize_deck.shuffle
   player_hand = []
   dealer_hand = []
+  winner = ''
   
   #initial deal
   deal_cards!(shuffled_deck, player_hand, 2)
   deal_cards!(shuffled_deck, dealer_hand, 2)
-  
+
+  dealer_total = 0
+  player_total = 0
+
   # begin player loop
   loop do
-
-    dealer_total = 0
-    dealer_total = dealer_hand[1..-1].inject(0) { |sum, card| sum + determine_value(card, dealer_hand) }
-    
-    player_total = 0
-    player_total = player_hand.inject(0) { |sum, card| sum + determine_value(card, player_hand) }
+    player_total = determine_value(player_hand)
     
     system 'clear'
     if player_total > 21
+      winner = 'Dealer'
       puts "You were dealt a #{player_hand[-1][:name]} for a total of #{player_total}."
       puts "You busted!"
       break
     end
-    puts "Delear has: #{dealer_hand[1][:name]} of #{dealer_hand[1][:suit]} for a total of #{dealer_total}" 
-    puts "Player has: #{player_hand_as_string(player_hand)} for a total of #{player_total}"
+    puts "Delear has: #{dealer_hand[1][:name]} of #{dealer_hand[1][:suit]} and an unknown card for a total of #{dealer_hand[1][:value]}" 
+    puts "Player has: #{hand_as_string(player_hand)} for a total of #{player_total}"
     break if hit? != true
     deal_cards!(shuffled_deck, player_hand, 1)
   end
   
-  # p player_hand
-  # p dealer_hand
-  # p shuffled_deck.size
+  dealer_total = determine_value(dealer_hand)
   
-  
-  break
+  loop do
+    break if winner == 'Dealer'
+    
+    while dealer_total < 17 || dealer_total < player_total do 
+      deal_cards!(shuffled_deck, dealer_hand, 1)
+      
+      dealer_total = determine_value(dealer_hand)
+      
+      puts "Dealer hits and draws a #{dealer_hand[-1][:name]} of #{dealer_hand[-1][:suit]}"
+      puts "Dealer has: #{hand_as_string(dealer_hand)}"
+      puts "Player has: #{hand_as_string(player_hand)}"
+      puts "Dealer has a total of #{dealer_total} versus player total of #{player_total}"  
+      puts ""
+    end
+    
+    if dealer_total > 21
+      winner = 'Player'
+      break
+    elsif player_total < dealer_total
+      winner = 'Dealer'
+      break
+    elsif player_total == dealer_total
+      winner = 'Push'
+      break
+    end
+  end
+    
+  # beginning dealer loop
+  # loop do
+  #   break if winner == 'Dealer'
+  #   dealer_total = determine_value(dealer_hand)
+    
+  #   if dealer_total < 17
+  #     deal_cards!(shuffled_deck, dealer_hand, 1)
+  #     dealer_total = determine_value(dealer_hand)
+  #     puts "Dealer hits and draws a #{dealer_hand[-1][:name]} of #{dealer_hand[-1][:suit]}"
+  #     puts "Dealer has a total of #{dealer_total} versus player total of #{player_total}"
+  #   elsif dealer_total > 21
+  #     winner = 'Player'
+  #     break
+  #   elsif dealer_total <= 21 && dealer_total < player_total
+  #     winner = 'Player'
+  #     break
+  #   elsif dealer_total <= 21 && dealer_total > player_total
+  #     winner = 'Dealer'
+  #     break
+  #   end
+  # end
+
+  prompt "#{winner} is the winner!"
+  prompt "Play again (y or n)?:"
+  break unless gets.chomp.downcase[0] == 'y'
 end
 
 
