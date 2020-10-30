@@ -13,17 +13,21 @@ def create_deck
       hash = {}
       hash[:name] = name
       hash[:suit] = suit
-      if ('2'..'10').include?(name) # rubocop wants this broken out into another method
-        hash[:value] = name.to_i
-      elsif %w(Jack Queen King).include?(name)
-        hash[:value] = 10
-      else
-        hash[:value] = 11
-      end
+      hash[:value] = assign_card_value(name)
       deck << hash
     end
   end
   deck
+end
+
+def assign_card_value(name)
+  if ('2'..'10').include?(name)
+    name.to_i
+  elsif %w(Jack Queen King).include?(name)
+    10
+  else
+    11
+  end
 end
 
 def deal_cards!(deck, hand, number_of_cards)
@@ -72,8 +76,8 @@ def determine_ace_value(non_ace_card_value, hand)
   end
 end
 
-def display_score(dealer_total, player_total)
-  puts "Dealer has a total of #{dealer_total} versus player total of #{player_total}"
+def display_score(d_total, p_total)
+  puts "Dealer has a total of #{d_total} vs. player total of #{p_total}"
 end
 
 def pause
@@ -81,7 +85,65 @@ def pause
   gets.chomp
 end
 
+def greeting
+  system 'clear'
+  puts "*****************************"
+  puts "        TWENTY ONE           "
+  puts "*****************************"
+  pause
+end
+
+def initial_deal(dealer_hand, player_hand)
+  d_name = dealer_hand[1][:name]
+  d_suit = dealer_hand[1][:suit]
+  d_total = dealer_hand[1][:value]
+  p_hand = hand_as_string(player_hand)
+  p_total = determine_value(player_hand)
+
+  puts "Dealer has: #{d_name} of #{d_suit} and an unknown card"
+  puts "Player has: #{p_hand}"
+  puts "Dealer has a total of #{d_total} vs. Player total of #{p_total}"
+end
+
+def player_bust(player_hand)
+  name = player_hand[-1][:name]
+  suit = player_hand[-1][:suit]
+  total = determine_value(player_hand)
+  puts "You were dealt a #{name} of #{suit} for a total of #{total}."
+  puts "You busted!"
+end
+
+def dealer_reveal(dealer_hand)
+  hand = hand_as_string(dealer_hand)
+  value = determine_value(dealer_hand)
+  system 'clear'
+  puts "Dealer reveals they have: #{hand} for a total of #{value}"
+end
+
+def dealer_hits(dealer_hand, player_hand)
+  name = dealer_hand[-1][:name]
+  suit = dealer_hand[-1][:suit]
+  puts "Dealer hits and draws a #{name} of #{suit}"
+  puts "Dealer has: #{hand_as_string(dealer_hand)}"
+  puts "Player has: #{hand_as_string(player_hand)}"
+end
+
+def announce_winner(winner)
+  if winner == 'Push'
+    puts "It's a push!"
+  else
+    puts "#{winner} is the winner!"
+  end
+end
+
+def play_again?
+  prompt "Play again (y or n)?:"
+  gets.chomp.downcase[0] == 'y'
+end
+
 loop do
+  greeting
+
   shuffled_deck = create_deck.shuffle
 
   player_hand = []
@@ -102,17 +164,14 @@ loop do
     system 'clear'
     if player_total > 21
       winner = 'Dealer'
-      puts "You were dealt a #{player_hand[-1][:name]} of #{player_hand[-1][:suit]} for a total of #{player_total}."
-      puts "You busted!"
+      player_bust(player_hand)
       break
     end
 
-    puts "Dealer has: #{dealer_hand[1][:name]} of #{dealer_hand[1][:suit]} and an unknown card for a total of #{dealer_hand[1][:value]}"
+    initial_deal(dealer_hand, player_hand)
 
-    puts "Player has: #{hand_as_string(player_hand)} for a total of #{player_total}"
     if hit? != true
-      system 'clear'
-      puts "Dealer reveals they have: #{hand_as_string(dealer_hand)} for a total of #{determine_value(dealer_hand)}"
+      dealer_reveal(dealer_hand)
       break
     end
     deal_cards!(shuffled_deck, player_hand, 1)
@@ -128,12 +187,8 @@ loop do
       system 'clear'
 
       deal_cards!(shuffled_deck, dealer_hand, 1)
-
       dealer_total = determine_value(dealer_hand)
-
-      puts "Dealer hits and draws a #{dealer_hand[-1][:name]} of #{dealer_hand[-1][:suit]}"
-      puts "Dealer has: #{hand_as_string(dealer_hand)}"
-      puts "Player has: #{hand_as_string(player_hand)}"
+      dealer_hits(dealer_hand, player_hand)
       display_score(dealer_total, player_total)
     end
 
@@ -149,7 +204,6 @@ loop do
     end
   end
 
-  puts "#{winner} is the winner!"
-  prompt "Play again (y or n)?:"
-  break unless gets.chomp.downcase[0] == 'y'
+  announce_winner(winner)
+  break if play_again? != true
 end
