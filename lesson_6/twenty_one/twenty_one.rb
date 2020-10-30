@@ -93,31 +93,35 @@ def greeting
   pause
 end
 
-def initial_deal(dealer_hand, player_hand)
+def initial_deal(dealer_hand, player_hand, p_total)
   d_name = dealer_hand[1][:name]
   d_suit = dealer_hand[1][:suit]
   d_total = dealer_hand[1][:value]
   p_hand = hand_as_string(player_hand)
-  p_total = determine_value(player_hand)
 
   puts "Dealer has: #{d_name} of #{d_suit} and an unknown card"
   puts "Player has: #{p_hand}"
   puts "Dealer has a total of #{d_total} vs. Player total of #{p_total}"
 end
 
-def player_bust(player_hand)
+def player_bust?(player_hand, p_total)
   name = player_hand[-1][:name]
   suit = player_hand[-1][:suit]
-  total = determine_value(player_hand)
-  puts "You were dealt a #{name} of #{suit} for a total of #{total}."
-  puts "You busted!"
+
+  if p_total > 21
+    puts "You were dealt a #{name} of #{suit} for a total of #{p_total}."
+    puts "You busted!"
+    true
+  else
+    false
+  end
 end
 
-def dealer_reveal(dealer_hand)
+def dealer_reveal(dealer_hand, d_total)
   hand = hand_as_string(dealer_hand)
-  value = determine_value(dealer_hand)
+
   system 'clear'
-  puts "Dealer reveals they have: #{hand} for a total of #{value}"
+  puts "Dealer reveals they have: #{hand} for a total of #{d_total}"
 end
 
 def dealer_hits(dealer_hand, player_hand)
@@ -128,6 +132,16 @@ def dealer_hits(dealer_hand, player_hand)
   puts "Player has: #{hand_as_string(player_hand)}"
 end
 
+def determine_winner(dealer_total, player_total)
+  if dealer_total > 21
+    'Player'
+  elsif player_total < dealer_total
+    'Dealer'
+  elsif player_total == dealer_total
+    'Push'
+  end
+end
+
 def announce_winner(winner)
   if winner == 'Push'
     puts "It's a push!"
@@ -136,74 +150,92 @@ def announce_winner(winner)
   end
 end
 
+def announce_grand_winner(dealer_wins, player_wins)
+  system 'clear'
+  if dealer_wins >= 5
+    puts "Dealer is the Grand Winner!"
+    puts "Dealer has won #{dealer_wins} games to #{player_wins}!"
+  else
+    puts "Player is the Grand Winner!"
+    puts "Player has won #{dealer_wins} games to #{player_wins}!"
+  end
+end
+
 def play_again?
   prompt "Play again (y or n)?:"
   gets.chomp.downcase[0] == 'y'
 end
 
+# main loop
 loop do
   greeting
+  dealer_wins = 0
+  player_wins = 0
 
-  shuffled_deck = create_deck.shuffle
-
-  player_hand = []
-  dealer_hand = []
-  winner = ''
-
-  # initial deal
-  deal_cards!(shuffled_deck, player_hand, 2)
-  deal_cards!(shuffled_deck, dealer_hand, 2)
-
-  dealer_total = 0
-  player_total = 0
-
-  # begin player loop
+  # best to 5 loop
   loop do
-    player_total = determine_value(player_hand)
+    break if dealer_wins == 5 || player_wins == 5
+    shuffled_deck = create_deck.shuffle
 
-    system 'clear'
-    if player_total > 21
-      winner = 'Dealer'
-      player_bust(player_hand)
-      break
-    end
+    player_hand = []
+    dealer_hand = []
+    winner = ''
 
-    initial_deal(dealer_hand, player_hand)
+    # initial deal
+    deal_cards!(shuffled_deck, player_hand, 2)
+    deal_cards!(shuffled_deck, dealer_hand, 2)
 
-    if hit? != true
-      dealer_reveal(dealer_hand)
-      break
-    end
-    deal_cards!(shuffled_deck, player_hand, 1)
-  end
+    dealer_total = 0
+    player_total = 0
 
-  dealer_total = determine_value(dealer_hand)
-
-  loop do
-    break if winner == 'Dealer'
-
-    while dealer_total < 17 || dealer_total < player_total
-      pause
-      system 'clear'
-
-      deal_cards!(shuffled_deck, dealer_hand, 1)
+    # begin player loop
+    loop do
+      player_total = determine_value(player_hand)
       dealer_total = determine_value(dealer_hand)
-      dealer_hits(dealer_hand, player_hand)
-      display_score(dealer_total, player_total)
+
+      system 'clear'
+      if player_bust?(player_hand, player_total)
+        winner = 'Dealer'
+        dealer_wins += 1
+        break
+      end
+
+      initial_deal(dealer_hand, player_hand, player_total)
+
+      if hit? != true
+        dealer_reveal(dealer_hand, dealer_total)
+        break
+      end
+      deal_cards!(shuffled_deck, player_hand, 1)
     end
 
-    if dealer_total > 21
-      winner = 'Player'
-      break
-    elsif player_total < dealer_total
-      winner = 'Dealer'
-      break
-    elsif player_total == dealer_total
-      winner = 'Push'
+    # dealer loop
+    loop do
+      break if winner == 'Dealer'
+      while dealer_total < 17 || dealer_total < player_total
+        break if dealer_total > player_total
+        pause
+        system 'clear'
+
+        deal_cards!(shuffled_deck, dealer_hand, 1)
+        dealer_total = determine_value(dealer_hand)
+        dealer_hits(dealer_hand, player_hand)
+        display_score(dealer_total, player_total)
+      end
+
+      winner = determine_winner(dealer_total, player_total)
+      if winner == 'Dealer'
+        dealer_wins += 1
+      elsif winner == 'Player'
+        player_wins += 1
+      end
       break
     end
+
+    announce_winner(winner)
+    pause
   end
 
-  announce_winner(winner)
+  announce_grand_winner(dealer_wins, player_wins)
   break if play_again? != true
 end
