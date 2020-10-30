@@ -1,5 +1,3 @@
-require 'pry'
-
 MAX_SCORE = 21
 DEALER_STAY = 17
 
@@ -183,7 +181,7 @@ loop do
   dealer_wins = 0
   player_wins = 0
 
-  # best to 5 loop
+  # first to 5 loop
   loop do
     break if dealer_wins == 5 || player_wins == 5
     shuffled_deck = create_deck.shuffle
@@ -221,8 +219,7 @@ loop do
     end
 
     # dealer loop
-    loop do
-      break if winner == 'Dealer'
+    if winner != 'Dealer'
       while dealer_total < DEALER_STAY || dealer_total < player_total
         break if dealer_total > player_total
         pause
@@ -240,7 +237,6 @@ loop do
       elsif winner == 'Player'
         player_wins += 1
       end
-      break
     end
 
     announce_winner(winner)
