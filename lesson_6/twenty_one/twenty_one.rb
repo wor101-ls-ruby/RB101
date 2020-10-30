@@ -1,5 +1,8 @@
 require 'pry'
 
+MAX_SCORE = 21
+DEALER_STAY = 17
+
 def prompt(string)
   puts '=>' + string
 end
@@ -46,8 +49,16 @@ def hand_as_string(hand)
 end
 
 def hit?
-  prompt "Hit or Stay (h or s)?:"
-  answer = gets.chop.downcase
+  answer = ''
+  loop do
+    prompt "Hit or Stay (h or s)?:"
+    answer = gets.chop.downcase
+    if answer[0] != 'h' && answer[0] != 's'
+      prompt "You must enter Hit or Stay"
+    else
+      break
+    end
+  end
   answer[0] == 'h'
 end
 
@@ -69,7 +80,7 @@ def determine_ace_value(non_ace_card_value, hand)
 
   if ace_cards.size == 0
     0
-  elsif 11 + (ace_cards.size - 1) + non_ace_card_value <= 21
+  elsif 11 + (ace_cards.size - 1) + non_ace_card_value <= MAX_SCORE
     11 + (ace_cards.size - 1)
   else
     ace_cards.size
@@ -108,7 +119,7 @@ def player_bust?(player_hand, p_total)
   name = player_hand[-1][:name]
   suit = player_hand[-1][:suit]
 
-  if p_total > 21
+  if p_total > MAX_SCORE
     puts "You were dealt a #{name} of #{suit} for a total of #{p_total}."
     puts "You busted!"
     true
@@ -133,7 +144,7 @@ def dealer_hits(dealer_hand, player_hand)
 end
 
 def determine_winner(dealer_total, player_total)
-  if dealer_total > 21
+  if dealer_total > MAX_SCORE
     'Player'
   elsif player_total < dealer_total
     'Dealer'
@@ -157,7 +168,7 @@ def announce_grand_winner(dealer_wins, player_wins)
     puts "Dealer has won #{dealer_wins} games to #{player_wins}!"
   else
     puts "Player is the Grand Winner!"
-    puts "Player has won #{dealer_wins} games to #{player_wins}!"
+    puts "Player has won #{player_wins} games to #{dealer_wins}!"
   end
 end
 
@@ -212,7 +223,7 @@ loop do
     # dealer loop
     loop do
       break if winner == 'Dealer'
-      while dealer_total < 17 || dealer_total < player_total
+      while dealer_total < DEALER_STAY || dealer_total < player_total
         break if dealer_total > player_total
         pause
         system 'clear'
