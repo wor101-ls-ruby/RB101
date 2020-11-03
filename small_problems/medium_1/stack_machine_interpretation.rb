@@ -4,23 +4,43 @@ def push(reg, stack)
 end 
 
 def add(reg, stack)
-  reg + stack.pop
+  if error?(stack, 'ADD') == false
+    reg + stack.pop
+  else
+    reg
+  end
 end 
 
 def subt(reg, stack)
-  reg - stack.pop
+  if error?(stack, 'SUB') == false
+    reg - stack.pop
+  else
+    reg
+  end
 end
 
 def mult(reg, stack)
-  reg * stack.pop
+  if error?(stack, 'MULT') == false
+    reg * stack.pop
+  else
+    reg
+  end
 end 
 
 def div(reg, stack)
-  reg / stack.pop
+  if error?(stack, 'DIV') == false
+    reg / stack.pop
+  else
+    reg
+  end
 end
 
 def mod(reg, stack)
-  reg % stack.pop
+  if error?(stack, 'MOD') == false
+    reg % stack.pop
+  else
+    reg
+  end
 end
 
 def pop(reg, stack)
@@ -31,7 +51,7 @@ def printm(reg, stack)
   puts reg
 end
 
-def empty_stack(stack, operation)
+def error?(stack, operation)
   error = false
   if stack.size == 0
     puts "ERROR: Stack is empty and #{operation} cannot be performed"
