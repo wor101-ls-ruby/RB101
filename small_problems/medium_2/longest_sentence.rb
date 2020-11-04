@@ -16,8 +16,16 @@ def longest_sentence(string)
   sentences = string.split(/[.!?]/)
   largest_sentece = sentences.max_by { |sentence| sentence.split.size }
   number_of_words = largest_sentece.split.size
-  puts largest_sentece
+  puts largest_sentece + string.split(largest_sentece)[1][0]
   puts number_of_words
+end
+
+def longest_paragraph(string)
+  paragraphs = string.strip.split(/\u2029/)
+  largest_paragraph = paragraphs.max_by { |paragraph| paragraph.split.size}
+  number_of_words = largest_paragraph.split.size
+  p number_of_words
+  p largest_paragraph
 end
 
 # longest_sentence(gettysburg)
@@ -58,11 +66,15 @@ of freedom -- and that government of the people, by
 the people, for the people, shall not perish from the
 earth."
 
-longest_sentence(test_string)
+# longest_sentence(test_string)
 
-longest_sentence(gettysburg)
+# longest_sentence(gettysburg)
 
-longest_sentence(frankenstein)
+# longest_sentence(frankenstein)
+
+# longest_paragraph(gettysburg)
+
+longest_paragraph(frankenstein)
 
 # **Algorithm**
 # 1. Take input string and spit it into an array by (.), (!), or (?)
