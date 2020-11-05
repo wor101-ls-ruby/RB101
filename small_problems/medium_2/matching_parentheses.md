@@ -31,6 +31,16 @@ balanced?('What ((is))) up(') == false
 - array of characters
 - 
 
+**New&Improved Algorithm**
+1. turn input string into an array of characters
+2. create an array of only the parentheses
+3. create return boolean
+3. count number of '(' and ')'
+4. if numbers are not equal set return false
+5. if numbers are equal confirm first element is '(' and last element is ')'
+  - if true then return true
+  - if false then return false
+
 **Algorithm**
 1. turn input string into an array of characters
 2. create return boolean and set to true
