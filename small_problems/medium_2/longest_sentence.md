@@ -7,6 +7,14 @@ Download the book at http://www.gutenberg.org/cache/epub/84/pg84.txt, and run yo
 
 The longest sentence in this book is 157 words long.
 
+Rules:
+Explicit
+  - Input: string
+  - Output: string 
+  - output string should be the longest sentence as well as number of words long
+  - sentences end with (.), (!), or (?)
+  - all other characters are not considered sentence ending
+
 
 **Examples / Test Cases**
 Four score and seven years ago our fathers brought forth
@@ -40,3 +48,14 @@ resolve that these dead shall not have died in vain
 of freedom -- and that government of the people, by
 the people, for the people, shall not perish from the
 earth.
+
+**Data Structures**
+- Input string
+- Output string
+- Integer representing number of words in output string
+
+**Algorithm**
+1. Take input string and spit it into an array by (.), (!), or (?)
+2. Iterate over the array and find out how many words are in each element
+3. return the element with the most words
+4. print that string plust the number of words in it
