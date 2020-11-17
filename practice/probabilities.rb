@@ -17,7 +17,8 @@ def die_rolls(target, dice, previous = [])
   valid_rolls
 end
 
+p die_rolls(7, 2)
 p die_rolls(6, 2)
-# p die_rolls(6, 2)
-p die_rolls(6, 3)
-p die_rolls(9, 4)
+# # p die_rolls(6, 2)
+# p die_rolls(6, 3)
+# p die_rolls(9, 4)
