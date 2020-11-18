@@ -80,14 +80,22 @@ def transpose(matrix)
 end
   
 def transpose!(matrix)
-  matrix = matrix + matrix
+  
+  matrix.size.times do
+      matrix << []
+  end
+  
+  (matrix.size / 2).times do |i|
 
-  (matrix.size / 2).times do |array|
-    # binding.pry
-    matrix[array].each_with_index do |element, index| 
-      binding.pry
-      matrix[index][array] = element 
+    matrix[i].each_with_index do |element, index|
+      # binding.pry
+      matrix[(matrix.size / 2) + index] = matrix[(matrix.size / 2) + index] + [element]
     end
+
+  end
+
+  (matrix.size / 2).times do 
+    matrix.shift
   end
   p matrix
 
