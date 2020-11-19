@@ -106,9 +106,10 @@ def flatten_and_sort(array)
     array.each do |element|
       # binding.pry
       if element[0][0].class == Array
-        flattened_array =  merge(flattened_array, flatten_and_sort(element).sort)
+        flattened_array =  merge(flattened_array, merge(flatten_and_sort(element), []))
 
       elsif element.class == Array
+        # binding.pry
         flattened_array = merge(flattened_array, element.flatten.sort)
       # else 
       #   flattened_array = merge(flattened_array, element.flatten[0]) 
