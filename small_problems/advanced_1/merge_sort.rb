@@ -59,6 +59,28 @@ merge_sort([7, 3, 9, 15, 23, 1, 6, 51, 22, 37, 54, 43, 5, 25, 35, 18, 46]) == [1
 3. return re-joined array
 
 =end
+require 'pry'
+
+def merge(array1, array2)
+  sorted_array = []
+  current_index1 = 0
+  current_index2 = 0
+  
+  until sorted_array.size == (array1.size + array2.size)
+    if current_index1 == array1.size
+      array2[current_index2..-1].each { |element| sorted_array << element }
+    elsif current_index2 == array2.size
+      array1[current_index1..-1].each { |element| sorted_array << element }
+    elsif array1[current_index1] <= array2[current_index2]
+      sorted_array << array1[current_index1]
+      current_index1 += 1
+    else
+      sorted_array << array2[current_index2]
+      current_index2 += 1
+    end
+  end
+  sorted_array
+end
 
 def create_nested_array(array)
   nested_array = []
@@ -77,51 +99,36 @@ def create_nested_array(array)
   nested_array
 end
 
-# **Algorithm - recombine sub-arrays**
-# 1. create method to re-join & sort elements
-# 2. check each elmeent of array
-#   - if array.class equals array then pass element to method as an argument
-#   - else (should mean it is a string or integer) flatten and sort
-# 3. return re-joined array
-
 
 def flatten_and_sort(array)
   flattened_array = []
 
-  # if array.none? { |element| element.class == Array } 
-  #   flattened_array = array
-  # else 
-
     array.each do |element|
+      # binding.pry
       if element[0][0].class == Array
-        flatten_and_sort(element)
+        flattened_array =  merge(flattened_array, flatten_and_sort(element).sort)
+
       elsif element.class == Array
-        flattened_array << element.flatten.sort
-      else 
-        flattened_array << element
+        flattened_array = merge(flattened_array, element.flatten.sort)
+      # else 
+      #   flattened_array = merge(flattened_array, element.flatten[0]) 
       end
     end
-
-  # end
-  flattened_array
+   flattened_array
 end
 
 def merge_sort(array)
-  
-  nested_array = create_nested_array(array)
-  
-  
-  p flatten_and_sort(nested_array)
-  
+ nested_array = create_nested_array(array)
+ flatten_and_sort(nested_array)
 end
 
 
 
-merge_sort([1])
- merge_sort([3,2,1])
+p merge_sort([1])
+p merge_sort([3,2,1])
 
 p merge_sort([9, 5, 7, 1]) == [1, 5, 7, 9]
-# p merge_sort([5, 3]) == [3, 5]
-# p merge_sort([6, 2, 7, 1, 4]) == [1, 2, 4, 6, 7]
-# p merge_sort(%w(Sue Pete Alice Tyler Rachel Kim Bonnie)) == %w(Alice Bonnie Kim Pete Rachel Sue Tyler)
-# p merge_sort([7, 3, 9, 15, 23, 1, 6, 51, 22, 37, 54, 43, 5, 25, 35, 18, 46]) == [1, 3, 5, 6, 7, 9, 15, 18, 22, 23, 25, 35, 37, 43, 46, 51, 54]
+p merge_sort([5, 3]) == [3, 5]
+p merge_sort([6, 2, 7, 1, 4]) == [1, 2, 4, 6, 7]
+p merge_sort(%w(Sue Pete Alice Tyler Rachel Kim Bonnie)) == %w(Alice Bonnie Kim Pete Rachel Sue Tyler)
+p merge_sort([7, 3, 9, 15, 23, 1, 6, 51, 22, 37, 54, 43, 5, 25, 35, 18, 46]) == [1, 3, 5, 6, 7, 9, 15, 18, 22, 23, 25, 35, 37, 43, 46, 51, 54]
