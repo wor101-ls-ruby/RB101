@@ -40,3 +40,9 @@ p repeated_substring_pattern('aba') == false
 p repeated_substring_pattern('aabaaba') == false
 p repeated_substring_pattern('abaababaab') == true
 p repeated_substring_pattern('abcabcabcabc') == true
+
+
+
+# things to note:
+# strings with lengths that are prime numbers can only have a repeated substring of a single character
+# substrings can only be a length that is a multiple of the length of the string
