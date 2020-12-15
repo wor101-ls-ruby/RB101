@@ -50,3 +50,5 @@ array3 = [12, 5, 82, 43, 77, 2,46, 11, 8]
 p sort(array3)
 
 p array2.sort { |a, b| a.size <=> b.size }
+
+p array2.sort_by { |animal| animal[-1] } 
